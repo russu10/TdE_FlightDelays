@@ -8,7 +8,7 @@ class View(ft.UserControl):
         self._page = page
         self._page.title = "Template application using MVC and DAO"
         self._page.horizontal_alignment = 'CENTER'
-        self._page.theme_mode = ft.ThemeMode.DARK
+        self._page.theme_mode = ft.ThemeMode.LIGHT
         # controller (it is not initialized. Must be initialized in the main, after the controller is created)
         self._controller = None
         # graphical elements
@@ -20,23 +20,39 @@ class View(ft.UserControl):
 
     def load_interface(self):
         # title
-        self._title = ft.Text("Hello World", color="blue", size=24)
-        self._page.controls.append(self._title)
+        self._page.title = "FlightDelays"
+        self._page.vertical_alignment = ft.MainAxisAlignment.START
 
-        #ROW with some controls
-        # text field for the name
-        self.txt_name = ft.TextField(
-            label="name",
-            width=200,
-            hint_text="Insert a your name"
+        # Titolo (opzionale)
+        self._title = ft.Text("FlightDelays", style="headlineMedium", text_align="center")
+
+        # Campo numero minimo compagnie
+        self._min_companies = ft.TextField(label="# compagnie minimo", width=200)
+
+        # Dropdown partenza e destinazione
+        self._airport_origin = ft.Dropdown(label="Aeroporto di partenza", options=[], width=800)
+        self._airport_dest = ft.Dropdown(label="Aeroporto destinazione", options=[], width=800)
+
+        # Pulsanti
+        self._analyze_button = ft.ElevatedButton("Analizza aeroporti", width=160,
+                                                 on_click=self._controller.trovaAeroporti)
+        self._test_button = ft.OutlinedButton("Test Connessione", width=160,
+                                              on_click=self._controller.percorso)
+
+
+
+        # Layout pulsanti
+        self._button_row = ft.Row([self._analyze_button, self._test_button], alignment=ft.MainAxisAlignment.SPACE_BETWEEN)
+
+        # Layout finale
+        self._page.add(
+            self._title,
+            ft.Row([self._min_companies], alignment=ft.MainAxisAlignment.START),
+            ft.Row([self._airport_origin], alignment=ft.MainAxisAlignment.START),
+            ft.Row([self._airport_dest], alignment=ft.MainAxisAlignment.START),
+            self._button_row,
+
         )
-
-        # button for the "hello" reply
-        self.btn_hello = ft.ElevatedButton(text="Hello", on_click=self._controller.handle_hello)
-        row1 = ft.Row([self.txt_name, self.btn_hello],
-                      alignment=ft.MainAxisAlignment.CENTER)
-        self._page.controls.append(row1)
-
         # List View where the reply is printed
         self.txt_result = ft.ListView(expand=1, spacing=10, padding=20, auto_scroll=True)
         self._page.controls.append(self.txt_result)
